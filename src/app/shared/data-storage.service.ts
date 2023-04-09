@@ -7,13 +7,14 @@ import { RecipeService } from '../recipes/recipe.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
+  url: string = "https://ng-complete-guide-6ad66-default-rtdb.firebaseio.com/"
   constructor(private http: HttpClient, private recipeService: RecipeService) {}
 
   storeRecipes() {
     const recipes = this.recipeService.getRecipes();
     this.http
       .put(
-        'https://ng-course-recipe-book-65f10.firebaseio.com/recipes.json',
+        this.url,
         recipes
       )
       .subscribe(response => {
@@ -24,7 +25,7 @@ export class DataStorageService {
   fetchRecipes() {
     return this.http
       .get<Recipe[]>(
-        'https://ng-course-recipe-book-65f10.firebaseio.com/recipes.json'
+        this.url
       )
       .pipe(
         map(recipes => {
@@ -37,6 +38,7 @@ export class DataStorageService {
         }),
         tap(recipes => {
           this.recipeService.setRecipes(recipes);
+          console.log(recipes)
         })
       )
   }
